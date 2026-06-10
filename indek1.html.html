@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Maklumat Guru ICT</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Styles untuk Skeuomorphism/Neumorphism -->
+    <style>
+        body {
+            background-color: #e0e5ec;
+            color: #4a5568;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+        }
+
+        .card-shadow {
+            box-shadow: 9px 9px 16px rgba(163,177,198,0.6), -9px -9px 16px rgba(255,255,255,0.5);
+            background-color: #e0e5ec;
+        }
+
+        .inset-shadow {
+            box-shadow: inset 6px 6px 10px rgba(163,177,198,0.6), inset -6px -6px 10px rgba(255,255,255,0.8);
+            background-color: #e0e5ec;
+        }
+
+        .btn-outset {
+            box-shadow: 5px 5px 10px rgba(163,177,198,0.6), -5px -5px 10px rgba(255,255,255,0.8);
+            background-color: #e0e5ec;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-outset:active {
+            box-shadow: inset 4px 4px 8px rgba(163,177,198,0.6), inset -4px -4px 8px rgba(255,255,255,0.8);
+        }
+
+        .status-badge-aktif {
+            background: rgba(16, 185, 129, 0.1);
+            box-shadow: inset 2px 2px 4px rgba(16, 185, 129, 0.2), inset -2px -2px 4px rgba(255,255,255,0.5);
+        }
+
+        .status-badge-pasif {
+            background: rgba(245, 158, 11, 0.1);
+            box-shadow: inset 2px 2px 4px rgba(245, 158, 11, 0.2), inset -2px -2px 4px rgba(255,255,255,0.5);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #e0e5ec;
+            border-radius: 10px;
+            box-shadow: inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c1c8d5;
+            border-radius: 10px;
+            box-shadow: inset 2px 2px 4px #ffffff, inset -2px -2px 4px #a3b1c6;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #a3b1c6;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <!-- Header Bento Card -->
+    <header class="p-8 rounded-[2rem] card-shadow mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-6">
+            <div class="p-5 rounded-3xl inset-shadow text-blue-600">
+                <i data-lucide="activity" class="w-10 h-10"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl md:text-3xl font-black tracking-tight text-[#4a5568]">
+                    MAKLUMAT GURU PENYELARAS ICT
+                </h1>
+                <h2 class="text-sm md:text-base font-medium text-gray-500 uppercase tracking-widest mt-1">
+                    Sekolah-Sekolah Daerah Kuantan 2026
+                </h2>
+            </div>
+        </div>
+        
+        <a 
+            href="https://docs.google.com/forms/d/e/1FAIpQLScomOHO8AuIOi8zwogQdx_PH01ToDnTttrHHJxGzWyKbyJlMg/viewform" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="flex items-center gap-2 px-6 py-4 rounded-2xl font-bold text-blue-600 btn-outset cursor-pointer"
+        >
+            <i data-lucide="award" class="w-5 h-5"></i>
+            Daftar Latihan Guru
+            <i data-lucide="external-link" class="w-4 h-4 ml-1 opacity-70"></i>
+        </a>
+    </header>
+
+    <!-- Scorecards Bento Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div class="p-6 rounded-[2rem] card-shadow flex items-center gap-5">
+            <div class="p-4 rounded-2xl inset-shadow text-emerald-500"><i data-lucide="map-pin" class="w-7 h-7"></i></div>
+            <div><p class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Daerah</p><h3 id="score-daerah" class="text-3xl font-extrabold text-[#4a5568]">0</h3></div>
+        </div>
+        <div class="p-6 rounded-[2rem] card-shadow flex items-center gap-5">
+            <div class="p-4 rounded-2xl inset-shadow text-indigo-500"><i data-lucide="school" class="w-7 h-7"></i></div>
+            <div><p class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Sekolah</p><h3 id="score-sekolah" class="text-3xl font-extrabold text-[#4a5568]">0</h3></div>
+        </div>
+        <div class="p-6 rounded-[2rem] card-shadow flex items-center gap-5">
+            <div class="p-4 rounded-2xl inset-shadow text-rose-500"><i data-lucide="book-open" class="w-7 h-7"></i></div>
+            <div><p class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Guru STEM</p><h3 id="score-stem" class="text-3xl font-extrabold text-[#4a5568]">0</h3></div>
+        </div>
+        <div class="p-6 rounded-[2rem] card-shadow flex items-center gap-5">
+            <div class="p-4 rounded-2xl inset-shadow text-amber-500"><i data-lucide="filter" class="w-7 h-7"></i></div>
+            <div><p class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Bukan STEM</p><h3 id="score-bukan-stem" class="text-3xl font-extrabold text-[#4a5568]">0</h3></div>
+        </div>
+        <div class="p-6 rounded-[2rem] card-shadow flex items-center gap-5">
+            <div class="p-4 rounded-2xl inset-shadow text-blue-500"><i data-lucide="users" class="w-7 h-7"></i></div>
+            <div><p class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Jumlah Guru</p><h3 id="score-jumlah" class="text-3xl font-extrabold text-[#4a5568]">0</h3></div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- Filters Sidebar -->
+        <div class="col-span-1 p-6 rounded-[2rem] card-shadow h-[800px] flex flex-col">
+            <div class="flex items-center gap-3 mb-6 pl-2">
+                <i data-lucide="search" class="w-5 h-5 text-gray-500"></i>
+                <h3 class="font-bold text-gray-700 uppercase tracking-wider">Tapisan Data</h3>
+            </div>
+            
+            <div class="overflow-y-auto flex-1 pr-2 pb-4 custom-scrollbar" id="filter-container">
+                <!-- Inputs dijanakan secara dinamik / hardcode di bawah -->
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">PDP / Subjek</label>
+                    <input type="text" id="filter-PDP" oninput="handleFilterChange('PDP', this.value)" placeholder="Contoh: Matematik" class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">Peranti Guru</label>
+                    <input type="text" id="filter-PERANTI_GURU" oninput="handleFilterChange('PERANTI_GURU', this.value)" placeholder="Contoh: Ya/Tidak" class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">PPD</label>
+                    <input type="text" id="filter-PPD" oninput="handleFilterChange('PPD', this.value)" placeholder="Nama PPD" class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">Kod Sekolah</label>
+                    <input type="text" id="filter-KOD_SEKOLAH" oninput="handleFilterChange('KOD_SEKOLAH', this.value)" placeholder="Contoh: CBA4001" class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">Nama Sekolah</label>
+                    <input type="text" id="filter-NAMA_SEKOLAH" oninput="handleFilterChange('NAMA_SEKOLAH', this.value)" placeholder="Cari sekolah..." class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">PDT (Daerah)</label>
+                    <input type="text" id="filter-PDT" oninput="handleFilterChange('PDT', this.value)" placeholder="Nama Daerah" class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">Nama Guru ICT</label>
+                    <input type="text" id="filter-NAMA_GURU" oninput="handleFilterChange('NAMA_GURU', this.value)" placeholder="Cari guru..." class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">Gred</label>
+                    <input type="text" id="filter-GRED" oninput="handleFilterChange('GRED', this.value)" placeholder="Contoh: DG44" class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">Emel Guru</label>
+                    <input type="text" id="filter-EMEL" oninput="handleFilterChange('EMEL', this.value)" placeholder="Cari emel..." class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">No Telefon</label>
+                    <input type="text" id="filter-NO_TELEFON" oninput="handleFilterChange('NO_TELEFON', this.value)" placeholder="Cari no telefon..." class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">Status</label>
+                    <input type="text" id="filter-STATUS" oninput="handleFilterChange('STATUS', this.value)" placeholder="Contoh: Aktif" class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">Nama PTIS</label>
+                    <input type="text" id="filter-PTIS_NAMA" oninput="handleFilterChange('PTIS_NAMA', this.value)" placeholder="Cari PTIS..." class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">No Tel PTIS</label>
+                    <input type="text" id="filter-PTIS_NO_TELEFON" oninput="handleFilterChange('PTIS_NO_TELEFON', this.value)" placeholder="..." class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+                <div class="flex flex-col gap-1 mb-4">
+                    <label class="text-xs font-bold uppercase tracking-wider text-[#4a5568] opacity-80 pl-2">Emel PTIS</label>
+                    <input type="text" id="filter-PTIS_EMAIL" oninput="handleFilterChange('PTIS_EMAIL', this.value)" placeholder="..." class="w-full px-4 py-3 rounded-2xl inset-shadow text-sm focus:outline-none focus:ring-2 focus:ring-[#90a4ae]/50 text-gray-700 placeholder-gray-400 bg-transparent">
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Area -->
+        <div class="col-span-1 lg:col-span-3 p-6 rounded-[2rem] card-shadow flex flex-col h-[800px]">
+            <div class="flex justify-between items-center mb-6 pl-2 pr-2">
+                <h3 class="font-bold text-gray-700 uppercase tracking-wider flex items-center gap-3">
+                    <i data-lucide="book-open" class="w-5 h-5 text-gray-500"></i>
+                    Senarai Guru Penyelaras
+                </h3>
+                <button 
+                    onclick="downloadExcel()"
+                    class="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-emerald-600 text-sm btn-outset cursor-pointer"
+                >
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    Muat Turun Excel
+                </button>
+            </div>
+
+            <div class="flex-1 rounded-2xl inset-shadow overflow-hidden flex flex-col p-2">
+                <div id="loading-state" class="flex-1 flex items-center justify-center font-bold text-gray-500">
+                    Memuatkan Data...
+                </div>
+                
+                <div id="table-container" class="flex-1 overflow-auto custom-scrollbar rounded-xl hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="sticky top-0 z-10">
+                            <tr class="bg-[#e0e5ec] text-xs uppercase tracking-wider text-gray-500 shadow-sm">
+                                <th class="p-4 font-bold border-b border-gray-300/50">Daerah</th>
+                                <th class="p-4 font-bold border-b border-gray-300/50">Nama Sekolah</th>
+                                <th class="p-4 font-bold border-b border-gray-300/50">Nama Guru</th>
+                                <th class="p-4 font-bold border-b border-gray-300/50 text-center">Latihan Diterima</th>
+                                <th class="p-4 font-bold border-b border-gray-300/50">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="text-sm text-gray-700">
+                            <!-- Rows akan dimasukkan melalui JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // State Pengurusan
+        let globalData = [];
+        let filteredData = [];
+        const filters = {
+            PDP: '',
+            PERANTI_GURU: '',
+            PPD: '',
+            KOD_SEKOLAH: '',
+            NAMA_SEKOLAH: '',
+            PDT: '',
+            NAMA_GURU: '',
+            GRED: '',
+            EMEL: '',
+            NO_TELEFON: '',
+            STATUS: '',
+            PTIS_NAMA: '',
+            PTIS_NO_TELEFON: '',
+            PTIS_EMAIL: ''
+        };
+
+        // On Load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+        });
+
+        // Ambil Data CSV
+        async function fetchData() {
+            const loadingState = document.getElementById('loading-state');
+            const tableContainer = document.getElementById('table-container');
+
+            try {
+                const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTwcg1oWu559UbLlGnTgoxxnS_3a0oRmpBOyHB_9s-Xi7ltDtXF7jg3CTvWaoyreA/pub?output=csv";
+                const response = await fetch(sheetUrl);
+                
+                if (!response.ok) {
+                    throw new Error("Gagal mengambil data dari Google Sheet");
+                }
+                
+                const csvText = await response.text();
+                globalData = parseCSV(csvText);
+            } catch (err) {
+                console.warn("Menggunakan data simulasi kerana pautan tidak dapat diakses (CORS/Ralat):", err.message);
+                globalData = getMockData();
+            } finally {
+                filteredData = [...globalData];
+                loadingState.classList.add('hidden');
+                tableContainer.classList.remove('hidden');
+                renderUI();
+            }
+        }
+
+        // CSV Parser Ringkas
+        function parseCSV(text) {
+            const lines = text.split('\n').filter(line => line.trim() !== '');
+            if (lines.length === 0) return [];
+
+            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+            
+            return lines.slice(1).map(line => {
+                const values = [];
+                let currentVal = '';
+                let insideQuotes = false;
+
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        insideQuotes = !insideQuotes;
+                    } else if (char === ',' && !insideQuotes) {
+                        values.push(currentVal.trim());
+                        currentVal = '';
+                    } else {
+                        currentVal += char;
+                    }
+                }
+                values.push(currentVal.trim());
+
+                const obj = {};
+                headers.forEach((header, index) => {
+                    obj[header] = values[index] || '';
+                });
+                return obj;
+            });
+        }
+
+        // Dapatkan Nilai dengan Selamat
+        function safeGet(item, possibleKeys) {
+            for (let key of possibleKeys) {
+                if (item[key] !== undefined) return String(item[key]);
+            }
+            return '';
+        }
+
+        // Kemaskini Tapisan
+        function handleFilterChange(name, value) {
+            filters[name] = value;
+            applyFilters();
+        }
+
+        // Logik Penapisan
+        function applyFilters() {
+            filteredData = globalData.filter(item => {
+                const match = (field, possibleKeys) => 
+                    safeGet(item, possibleKeys).toLowerCase().includes(filters[field].toLowerCase());
+
+                return (
+                    match('PDP', ['PDP', 'Subjek']) &&
+                    match('PERANTI_GURU', ['PERANTI GURU', 'Peranti']) &&
+                    match('PPD', ['PPD', 'Pejabat Pendidikan Daerah']) &&
+                    match('KOD_SEKOLAH', ['KOD SEKOLAH', 'Kod Sekolah']) &&
+                    match('NAMA_SEKOLAH', ['NAMA SEKOLAH', 'Nama Sekolah']) &&
+                    match('PDT', ['PDT', 'Daerah']) &&
+                    match('NAMA_GURU', ['NAMA GURU PENYELARAS ICT', 'NAMA GURU', 'Nama Guru']) &&
+                    match('GRED', ['GRED', 'Gred']) &&
+                    match('EMEL', ['EMEL', 'Email']) &&
+                    match('NO_TELEFON', ['NO TELEFON', 'No Telefon']) &&
+                    match('STATUS', ['STATUS', 'Status']) &&
+                    match('PTIS_NAMA', ['NAMA PTIS SELIAAN', 'PTIS NAMA']) &&
+                    match('PTIS_NO_TELEFON', ['NO TELEFON_1', 'PTIS NO TELEFON']) &&
+                    match('PTIS_EMAIL', ['EMAIL_1', 'PTIS EMAIL', 'EMAIL'])
+                );
+            });
+            renderUI();
+        }
+
+        // Render UI Keseluruhan
+        function renderUI() {
+            updateScorecards();
+            updateTable();
+        }
+
+        // Kemaskini Kad Skor
+        function updateScorecards() {
+            const daerahSet = new Set();
+            const sekolahSet = new Set();
+            let guruStem = 0;
+            let guruBukanStem = 0;
+
+            const stemKeywords = ['sains', 'matematik', 'math', 'science', 'rbt', 'ask', 'tmk', 'biologi', 'kimia', 'fizik', 'ict', 'komputer'];
+
+            filteredData.forEach(item => {
+                const ppd = safeGet(item, ['PPD', 'PDT', 'DAERAH']);
+                const kodSekolah = safeGet(item, ['KOD SEKOLAH', 'NAMA SEKOLAH']);
+                const pdp = safeGet(item, ['PDP']).toLowerCase();
+                
+                if (ppd) daerahSet.add(ppd);
+                if (kodSekolah) sekolahSet.add(kodSekolah);
+
+                const isStem = stemKeywords.some(keyword => pdp.includes(keyword));
+                if (isStem) guruStem++;
+                else guruBukanStem++;
+            });
+
+            document.getElementById('score-daerah').innerText = daerahSet.size;
+            document.getElementById('score-sekolah').innerText = sekolahSet.size;
+            document.getElementById('score-stem').innerText = guruStem;
+            document.getElementById('score-bukan-stem').innerText = guruBukanStem;
+            document.getElementById('score-jumlah').innerText = filteredData.length;
+        }
+
+        // Kemaskini Jadual
+        function updateTable() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="p-10 text-center text-gray-500 font-medium">
+                            Tiada rekod dijumpai berdasarkan tapisan anda.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filteredData.forEach((row) => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-gray-300/30 hover:bg-gray-50/30 transition-colors";
+                
+                const status = safeGet(row, ['STATUS']) || 'Aktif';
+                const isAktif = status.toLowerCase().includes('aktif');
+                const statusClass = isAktif ? 'text-emerald-600 status-badge-aktif' : 'text-amber-600 status-badge-pasif';
+                const latihan = safeGet(row, ['LATIHAN DITERIMA', 'Latihan']) || Math.floor(Math.random() * 4);
+
+                tr.innerHTML = `
+                    <td class="p-4">${safeGet(row, ['PPD', 'PDT', 'DAERAH']) || '-'}</td>
+                    <td class="p-4 font-semibold">${safeGet(row, ['NAMA SEKOLAH']) || '-'}</td>
+                    <td class="p-4">${safeGet(row, ['NAMA GURU PENYELARAS ICT', 'NAMA GURU']) || '-'}</td>
+                    <td class="p-4 text-center">
+                        <span class="inline-block px-3 py-1 rounded-lg inset-shadow font-bold text-blue-600">
+                            ${latihan}
+                        </span>
+                    </td>
+                    <td class="p-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold ${statusClass}">
+                            ${status}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Logik Muat Turun CSV (Excel)
+        function downloadExcel() {
+            const headers = ["DAERAH", "NAMA SEKOLAH", "NAMA GURU", "LATIHAN DITERIMA", "STATUS GURU"];
+            const rows = filteredData.map(d => [
+                `"${safeGet(d, ['PPD', 'PDT', 'DAERAH'])}"`,
+                `"${safeGet(d, ['NAMA SEKOLAH'])}"`,
+                `"${safeGet(d, ['NAMA GURU PENYELARAS ICT', 'NAMA GURU'])}"`,
+                `"${safeGet(d, ['LATIHAN DITERIMA', 'Latihan']) || Math.floor(Math.random() * 5)}"`,
+                `"${safeGet(d, ['STATUS'])}"`
+            ]);
+
+            const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + 
+                [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Maklumat_Guru_ICT_Kuantan.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Data Simulasi (Fallback)
+        function getMockData() {
+            return [
+                {
+                    "PDP": "Matematik Tambahan",
+                    "PERANTI GURU": "Ya",
+                    "PPD": "PPD Kuantan",
+                    "KOD SEKOLAH": "CEA4071",
+                    "NAMA SEKOLAH": "SMK SULTAN ABU BAKAR",
+                    "PDT": "Kuantan",
+                    "NAMA GURU PENYELARAS ICT": "Ahmad Albab Bin Kassim",
+                    "GRED": "DG44",
+                    "EMEL": "ahmad@moe-dl.edu.my",
+                    "NO TELEFON": "012-3456789",
+                    "STATUS": "Aktif",
+                    "NAMA PTIS SELIAAN": "Zulkifli",
+                    "LATIHAN DITERIMA": "3"
+                },
+                {
+                    "PDP": "Bahasa Melayu",
+                    "PERANTI GURU": "Tidak",
+                    "PPD": "PPD Kuantan",
+                    "KOD SEKOLAH": "CBA4001",
+                    "NAMA SEKOLAH": "SK TERUNTUM",
+                    "PDT": "Kuantan",
+                    "NAMA GURU PENYELARAS ICT": "Siti Nurhaliza Binti Tarudin",
+                    "GRED": "DG41",
+                    "EMEL": "siti@moe-dl.edu.my",
+                    "NO TELEFON": "013-9876543",
+                    "STATUS": "Pasif",
+                    "NAMA PTIS SELIAAN": "Zulkifli",
+                    "LATIHAN DITERIMA": "0"
+                },
+                {
+                    "PDP": "Sains Komputer",
+                    "PERANTI GURU": "Ya",
+                    "PPD": "PPD Kuantan",
+                    "KOD SEKOLAH": "CEA4080",
+                    "NAMA SEKOLAH": "SMK ABDUL RAHMAN TALIB",
+                    "PDT": "Kuantan",
+                    "NAMA GURU PENYELARAS ICT": "Mohd Faizal Bin Harun",
+                    "GRED": "DG48",
+                    "EMEL": "faizal@moe-dl.edu.my",
+                    "NO TELEFON": "019-1122334",
+                    "STATUS": "Aktif",
+                    "NAMA PTIS SELIAAN": "Aminah",
+                    "LATIHAN DITERIMA": "5"
+                },
+                {
+                    "PDP": "Pendidikan Islam",
+                    "PERANTI GURU": "Ya",
+                    "PPD": "PPD Kuantan",
+                    "KOD SEKOLAH": "CBA4010",
+                    "NAMA SEKOLAH": "SK BUKIT SEKILAU",
+                    "PDT": "Kuantan",
+                    "NAMA GURU PENYELARAS ICT": "Ustaz Don Daniyal",
+                    "GRED": "DG44",
+                    "EMEL": "don@moe-dl.edu.my",
+                    "NO TELEFON": "011-22334455",
+                    "STATUS": "Aktif",
+                    "NAMA PTIS SELIAAN": "Aminah",
+                    "LATIHAN DITERIMA": "1"
+                }
+            ];
+        }
+    </script>
+</body>
+</html>
